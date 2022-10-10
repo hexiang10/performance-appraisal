@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.performanceAppraisal.system.mapper.AssessInfoMapper">
+    
+    <resultMap type="AssessInfo" id="AssessInfoResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="remark"    column="remark"    />
+        <result property="score"    column="score"    />
+        <result property="standard"    column="standard"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectAssessInfoVo">
+        select id, title, start_date, end_date, remark, score, standard, create_by, create_time, update_by, update_time, del_flag from t_assess_info
+    </sql>
+
+    <select id="selectAssessInfoList" parameterType="AssessInfo" resultMap="AssessInfoResult">
+        <include refid="selectAssessInfoVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="startDate != null "> and start_date = #{startDate}</if>
+            <if test="endDate != null "> and end_date = #{endDate}</if>
+            <if test="score != null "> and score = #{score}</if>
+            <if test="standard != null  and standard != ''"> and standard = #{standard}</if>
+        </where>
+    </select>
+    
+    <select id="selectAssessInfoById" parameterType="Long" resultMap="AssessInfoResult">
+        <include refid="selectAssessInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAssessInfo" parameterType="AssessInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into t_assess_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">title,</if>
+            <if test="startDate != null">start_date,</if>
+            <if test="endDate != null">end_date,</if>
+            <if test="remark != null">remark,</if>
+            <if test="score != null">score,</if>
+            <if test="standard != null">standard,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">#{title},</if>
+            <if test="startDate != null">#{startDate},</if>
+            <if test="endDate != null">#{endDate},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="score != null">#{score},</if>
+            <if test="standard != null">#{standard},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAssessInfo" parameterType="AssessInfo">
+        update t_assess_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="startDate != null">start_date = #{startDate},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="standard != null">standard = #{standard},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAssessInfoById" parameterType="Long">
+        delete from t_assess_info where id = #{id}
+    </delete>
+
+    <delete id="deleteAssessInfoByIds" parameterType="String">
+        delete from t_assess_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

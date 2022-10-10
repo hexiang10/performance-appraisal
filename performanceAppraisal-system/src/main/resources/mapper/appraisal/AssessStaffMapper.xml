@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.performanceAppraisal.system.mapper.AssessStaffMapper">
+    
+    <resultMap type="AssessStaff" id="AssessStaffResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="assessId"    column="assess_id"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="itemArr"    column="item_arr"    />
+        <result property="self"    column="self"    />
+        <result property="selfState"    column="self_state"    />
+        <result property="selfNum"    column="self_num"    />
+        <result property="review"    column="review"    />
+        <result property="reviewState"    column="review_state"    />
+        <result property="reviewNum"    column="review_num"    />
+        <result property="total"    column="total"    />
+        <result property="fileId"    column="file_id"    />
+        <result property="declareState"    column="declare_state"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="assessTitle"    column="assess_title"    />
+        <result property="userName"    column="user_name"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="deptName"    column="dept_name"    />
+    </resultMap>
+
+    <sql id="selectAssessStaffVo">
+        select id, user_id, assess_id, dept_id, item_arr, self, self_state, self_num, review, review_state, review_num, total, file_id, declare_state, remark, create_by, create_time, update_by, update_time, del_flag from t_assess_staff
+    </sql>
+
+    <sql id="selectAssessStaffListVo">
+        SELECT
+            s.id,
+            a.assess_title,
+            a.assess_id,
+            d.dept_name,
+            u.user_id,
+            u.dept_id,
+            u.user_name,
+            u.nick_name,
+            IFNULL( s.self_num, 0 ) AS self_num,
+            IFNULL( s.review_num, 0 ) AS review_num,
+            IFNULL( s.total, 0 ) AS total,
+            IFNULL( s.self_state, '0') AS self_state,
+            IFNULL( s.review_state, '0' ) AS review_state,
+            IFNULL( s.declare_state, '0' ) AS declare_state
+        FROM
+            sys_user u
+                LEFT JOIN sys_dept d ON u.dept_id = d.dept_id
+                LEFT JOIN t_assess_issue a ON u.dept_id = a.dept_id
+                LEFT JOIN t_assess_staff s ON (s.user_id = u.user_id AND s.assess_id = a.assess_id)
+    </sql>
+
+    <select id="selectAssessStaffList" parameterType="AssessStaff" resultMap="AssessStaffResult">
+        <include refid="selectAssessStaffListVo"/>
+        <where>
+         1=1
+            AND u.del_flag = '0'
+            AND u.`status` = '0'
+            AND a.`status` = '1'
+            <if test="assessTitle != null  and assessTitle != ''"> and a.assess_title LIKE CONCAT('%',#{assessTitle},'%')</if>
+            <if test="deptId != null  and deptId != ''"> and u.dept_id LIKE CONCAT('%',#{deptId},'%')</if>
+        </where>
+    </select>
+    
+    <select id="selectAssessStaffById" parameterType="Long" resultMap="AssessStaffResult">
+        <include refid="selectAssessStaffVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAssessStaff" parameterType="AssessStaff" useGeneratedKeys="true" keyProperty="id">
+        insert into t_assess_staff
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="assessId != null">assess_id,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="itemArr != null">item_arr,</if>
+            <if test="self != null">self,</if>
+            <if test="selfState != null">self_state,</if>
+            <if test="selfNum != null">self_num,</if>
+            <if test="review != null">review,</if>
+            <if test="reviewState != null">review_state,</if>
+            <if test="reviewNum != null">review_num,</if>
+            <if test="total != null">total,</if>
+            <if test="fileId != null">file_id,</if>
+            <if test="declareState != null">declare_state,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="assessId != null">#{assessId},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="itemArr != null">#{itemArr},</if>
+            <if test="self != null">#{self},</if>
+            <if test="selfState != null">#{selfState},</if>
+            <if test="selfNum != null">#{selfNum},</if>
+            <if test="review != null">#{review},</if>
+            <if test="reviewState != null">#{reviewState},</if>
+            <if test="reviewNum != null">#{reviewNum},</if>
+            <if test="total != null">#{total},</if>
+            <if test="fileId != null">#{fileId},</if>
+            <if test="declareState != null">#{declareState},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAssessStaff" parameterType="AssessStaff">
+        update t_assess_staff
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="assessId != null">assess_id = #{assessId},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="itemArr != null">item_arr = #{itemArr},</if>
+            <if test="self != null">self = #{self},</if>
+            <if test="selfState != null">self_state = #{selfState},</if>
+            <if test="selfNum != null">self_num = #{selfNum},</if>
+            <if test="review != null">review = #{review},</if>
+            <if test="reviewState != null">review_state = #{reviewState},</if>
+            <if test="reviewNum != null">review_num = #{reviewNum},</if>
+            <if test="total != null">total = #{total},</if>
+            <if test="fileId != null">file_id = #{fileId},</if>
+            <if test="declareState != null">declare_state = #{declareState},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAssessStaffById" parameterType="Long">
+        delete from t_assess_staff where id = #{id}
+    </delete>
+
+    <delete id="deleteAssessStaffByIds" parameterType="String">
+        delete from t_assess_staff where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

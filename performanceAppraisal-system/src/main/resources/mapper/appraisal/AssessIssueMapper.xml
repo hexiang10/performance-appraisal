@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.performanceAppraisal.system.mapper.AssessIssueMapper">
+    
+    <resultMap type="AssessIssue" id="AssessIssueResult">
+        <result property="id"    column="id"    />
+        <result property="assessId"    column="assess_id"    />
+        <result property="assessTitle"    column="assess_title"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectAssessIssueVo">
+        select id, assess_id, assess_title, dept_id, dept_name, create_by, create_time, update_by, update_time, del_flag, status from t_assess_issue
+    </sql>
+
+    <select id="selectAssessIssueList" parameterType="AssessIssue" resultMap="AssessIssueResult">
+        <include refid="selectAssessIssueVo"/>
+        <where>  
+            <if test="assessId != null "> and assess_id = #{assessId}</if>
+            <if test="assessTitle != null  and assessTitle != ''"> and assess_title LIKE CONCAT('%',#{assessTitle},'%')</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="deptName != null  and deptName != ''"> and dept_name like concat('%', #{deptName}, '%')</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectAssessIssueById" parameterType="Long" resultMap="AssessIssueResult">
+        <include refid="selectAssessIssueVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAssessIssue" parameterType="AssessIssue">
+        insert into t_assess_issue
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="assessId != null">assess_id,</if>
+            <if test="assessTitle != null">assess_title,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="deptName != null">dept_name,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="assessId != null">#{assessId},</if>
+            <if test="assessTitle != null">#{assessTitle},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="deptName != null">#{deptName},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAssessIssue" parameterType="AssessIssue">
+        update t_assess_issue
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="assessId != null">assess_id = #{assessId},</if>
+            <if test="assessTitle != null">assess_title = #{assessTitle},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAssessIssueById" parameterType="Long">
+        delete from t_assess_issue where id = #{id}
+    </delete>
+
+    <delete id="deleteAssessIssueByIds" parameterType="String">
+        delete from t_assess_issue where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

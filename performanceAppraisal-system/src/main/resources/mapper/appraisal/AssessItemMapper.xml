@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.performanceAppraisal.system.mapper.AssessItemMapper">
+    
+    <resultMap type="AssessItem" id="AssessItemResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="standard"    column="standard"    />
+        <result property="remark"    column="remark"    />
+        <result property="score"    column="score"    />
+        <result property="ratio"    column="ratio"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectAssessItemVo">
+        select id, title, standard, remark, score, ratio, create_by, create_time, update_by, update_time, del_flag from t_assess_item
+    </sql>
+
+    <select id="selectAssessItemList" parameterType="AssessItem" resultMap="AssessItemResult">
+        <include refid="selectAssessItemVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title LIKE CONCAT('%',#{title},'%')</if>
+            <if test="standard != null  and standard != ''"> and standard = #{standard}</if>
+            <if test="score != null "> and score = #{score}</if>
+            <if test="ratio != null "> and ratio = #{ratio}</if>
+        </where>
+    </select>
+    
+    <select id="selectAssessItemById" parameterType="Long" resultMap="AssessItemResult">
+        <include refid="selectAssessItemVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAssessItem" parameterType="AssessItem">
+        insert into t_assess_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="title != null">title,</if>
+            <if test="standard != null">standard,</if>
+            <if test="remark != null">remark,</if>
+            <if test="score != null">score,</if>
+            <if test="ratio != null">ratio,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="title != null">#{title},</if>
+            <if test="standard != null">#{standard},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="score != null">#{score},</if>
+            <if test="ratio != null">#{ratio},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAssessItem" parameterType="AssessItem">
+        update t_assess_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="standard != null">standard = #{standard},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="ratio != null">ratio = #{ratio},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAssessItemById" parameterType="Long">
+        delete from t_assess_item where id = #{id}
+    </delete>
+
+    <delete id="deleteAssessItemByIds" parameterType="String">
+        delete from t_assess_item where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="selectAssessItemByIds" parameterType="String" resultMap="AssessItemResult">
+        <include refid="selectAssessItemVo"/>
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+</mapper>

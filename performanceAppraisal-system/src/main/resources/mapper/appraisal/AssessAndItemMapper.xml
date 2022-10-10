@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.performanceAppraisal.system.mapper.AssessAndItemMapper">
+    
+    <resultMap type="AssessAndItem" id="AssessAndItemResult">
+        <result property="id"    column="id"    />
+        <result property="assessId"    column="assess_id"    />
+        <result property="itemId"    column="item_id"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectAssessAndItemVo">
+        select id, assess_id, item_id, create_time from t_assess_and_item
+    </sql>
+
+    <select id="selectAssessAndItemList" parameterType="AssessAndItem" resultMap="AssessAndItemResult">
+        <include refid="selectAssessAndItemVo"/>
+        <where>  
+            <if test="assessId != null "> and assess_id = #{assessId}</if>
+            <if test="itemId != null "> and item_id = #{itemId}</if>
+        </where>
+    </select>
+    
+    <select id="selectAssessAndItemById" parameterType="Long" resultMap="AssessAndItemResult">
+        <include refid="selectAssessAndItemVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAssessAndItem" parameterType="AssessAndItem">
+        insert into t_assess_and_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="assessId != null">assess_id,</if>
+            <if test="itemId != null">item_id,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="assessId != null">#{assessId},</if>
+            <if test="itemId != null">#{itemId},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAssessAndItem" parameterType="AssessAndItem">
+        update t_assess_and_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="assessId != null">assess_id = #{assessId},</if>
+            <if test="itemId != null">item_id = #{itemId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAssessAndItemById" parameterType="Long">
+        delete from t_assess_and_item where id = #{id}
+    </delete>
+
+    <delete id="deleteAssessAndItemByIds" parameterType="String">
+        delete from t_assess_and_item where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteAssessAndItemByAssessId" parameterType="Long">
+        delete from t_assess_and_item where assess_id = #{assessId}
+    </delete>
+</mapper>
